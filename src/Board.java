@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.RenderingHints.Key;
 import java.awt.event.*;
 
 public class Board extends JPanel implements ActionListener{
@@ -9,7 +10,7 @@ public class Board extends JPanel implements ActionListener{
     private final int DOT_SIZE = 10, ALL_DOTS = 900, RANDOM_POSITION = 29;
     private final int x[] = new int[ALL_DOTS], y[] = new int [ALL_DOTS];
     private Timer timer;
-    private boolean inGame = true;
+    private boolean inGame = true, leftDirection = false, rightDirection = false, upDirection = false, downDirection = false;
 
     Board(){
         setBackground(Color.BLACK);
@@ -97,6 +98,38 @@ public class Board extends JPanel implements ActionListener{
             timer.stop();
         }
 
+    }
+
+    private class TAdapter extends KeyAdapter{
+
+        public void keyPressed(KeyEvent e){
+
+            int key = e.getKeyCode();
+            if(key == KeyEvent.VK_LEFT && (!rightDirection)){
+                leftDirection = true;
+                upDirection = false;
+                downDirection = false;
+            }
+
+            if(key == KeyEvent.VK_RIGHT && (!leftDirection)){
+                rightDirection = true;
+                upDirection = false;
+                downDirection = false;
+            }
+
+            if(key == KeyEvent.VK_UP && (!downDirection)){
+                upDirection = true;
+                leftDirection = false;
+                rightDirection = false;
+            }
+
+            if(key == KeyEvent.VK_DOWN && (!upDirection)){
+                downDirection = true;
+                leftDirection = false;
+                rightDirection = false;
+            }
+
+        }
     }
 
     @Override
