@@ -13,9 +13,10 @@ public class Board extends JPanel implements ActionListener{
     private boolean inGame = true, leftDirection = false, rightDirection = false, upDirection = false, downDirection = false;
 
     Board(){
+        addKeyListener(new TAdapter());
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(300, 300));
-    
+        setFocusable(true);
         loadImages();
         initGame();
     }
@@ -35,10 +36,10 @@ public class Board extends JPanel implements ActionListener{
         for(int z = 0; z<dots; z++){
             x[z] = 50 - z * DOT_SIZE;
             y[z] = 50;
-            locateApple();
-            timer = new Timer(140, this);
-            timer.start();
         }
+        locateApple();
+        timer = new Timer(140, this);
+        timer.start();
     }
 
     public void locateApple(){
@@ -53,6 +54,11 @@ public class Board extends JPanel implements ActionListener{
             dots++;
             locateApple();
         }
+    }
+
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        draw(g);
     }
 
     public void draw (Graphics g){
@@ -97,7 +103,34 @@ public class Board extends JPanel implements ActionListener{
         if(!inGame){
             timer.stop();
         }
+    }
 
+    public void move(){
+        for(int z = dots; z>0; z--){
+            x[z] = x[z-1];
+            y[z] = y[z-1];
+        }
+        if(leftDirection){
+            x[0] = x[0] - DOT_SIZE;
+        }
+        if(rightDirection){
+            x[0] = x[0] + DOT_SIZE;
+        }
+        if(upDirection){
+            y[0] = y[0] - DOT_SIZE;
+        }
+        if(downDirection){
+            y[0] = y[0] + DOT_SIZE;
+        }
+    }
+
+    public void actionPerformed(ActionEvent ae){
+        if(inGame){
+            checkApple();
+            checkCollision();
+            move();
+        }
+        repaint();
     }
 
     private class TAdapter extends KeyAdapter{
@@ -132,10 +165,4 @@ public class Board extends JPanel implements ActionListener{
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        if(inGame){
-            checkApple();
-        }
-    }
 }
