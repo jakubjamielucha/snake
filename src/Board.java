@@ -81,6 +81,24 @@ public class Board extends JPanel implements ActionListener{
         g.drawString(msg, (300 - metrices.stringWidth(msg))/2, 300/2);
     }
 
+    public void checkCollision(){
+
+        for(int z = dots; z > 0; z--){
+            if( z > 4 && x[0] == x[z] && y[0] == y[z]){
+                inGame = false;
+            }
+        }
+
+        if(y[0] >= 300 || y[0] < 0 || x[0] >= 300 || x[0] < 0){
+            inGame = false;
+        }
+
+        if(!inGame){
+            timer.stop();
+        }
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent ae) {
         if(inGame){
